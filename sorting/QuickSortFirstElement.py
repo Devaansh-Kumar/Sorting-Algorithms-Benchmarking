@@ -1,25 +1,36 @@
-def partition(arr, low, high):
-    pivot = arr[low]
-    i = low + 1
-    j = high
-
+def partition(array, low, high):
+   
+    # First Element as pivot
+    pivot = array[low]
+     
+    # st points to the starting of array
+    start = low + 1
+     
+    # end points to the ending of the array
+    end = high
+ 
     while True:
-        while i <= j and arr[i] <= pivot:
-            i += 1
-        while i <= j and arr[j] >= pivot:
-            j -= 1
-
-        if i <= j:
-            arr[i], arr[j] = arr[j], arr[i]
+        # It indicates we have already moved all the elements to their correct side of the pivot
+        while start <= end and array[end] >= pivot:
+            end = end - 1
+ 
+        # Opposite process
+        while start <= end and array[start] <= pivot:
+            start = start + 1
+ 
+        # Case in which we will exit the loop
+        if start <= end:
+            array[start], array[end] = array[end], array[start]
+            # The loop continues
         else:
+            # We exit out of the loop
             break
+ 
+    array[low], array[end] = array[end], array[low]
+    return end
 
-    arr[low], arr[j] = arr[j], arr[low]
-    return j
-
-
-def quick_sort_with_pivot_as_first_element(arr, low, high):
+def quick_sort_with_pivot_as_first_element(array, low, high):
     if low < high:
-        pi = partition(arr, low, high)
-        quick_sort_with_pivot_as_first_element(arr, low, pi - 1)
-        quick_sort_with_pivot_as_first_element(arr, pi + 1, high)
+        idx = partition(array, low, high)
+        quick_sort_with_pivot_as_first_element(array, low, idx-1)
+        quick_sort_with_pivot_as_first_element(array, idx+1, high)

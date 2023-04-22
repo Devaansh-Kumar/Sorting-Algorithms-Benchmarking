@@ -3,7 +3,10 @@ import os
 import time
 import pandas as pd
 import matplotlib.pyplot as plt
+import resource, sys
 
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+sys.setrecursionlimit(10000000)
 # t = [34,34,35,3,4234,24,3,4]
 
 def loader(path) -> list:
@@ -38,9 +41,15 @@ def evaluate_sort(sort_func):
         for file in file_names:
             list_of_numbers = loader("./"+directory+"/"+file)
 
-            _ , time_taken = wrapped_func(list_of_numbers)
+            print(f"Sorting {len(list_of_numbers)} numbers")
+            if sort_func not in [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element]:
 
-            print(f"Time taken for {directory} numbers of {file} to be sorted is {time_taken}")
+                _ , time_taken = wrapped_func(list_of_numbers)
+
+            else:
+                _ , time_taken = wrapped_func(list_of_numbers,low=0,high=len(list_of_numbers)-1)
+
+            print(f"Time taken for {directory} numbers of {file} to be sorted is {time_taken}\n")
 
             times[directory].append((len(list_of_numbers),time_taken))
 
@@ -80,8 +89,9 @@ def g_img(times, func):
     plt.savefig(image_name + "linear" + ".png")
     plt.yscale('log')
     plt.savefig(image_name + "log" + ".png")
+    plt.clf()
 
-sorting = [HeapSort.heap_sort, InsertionSort.insertion_sort, MergeSort.merge_sort, RadixSort.radix_sort, QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element]
+sorting = [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, HeapSort.heap_sort, MergeSort.merge_sort, RadixSort.radix_sort, InsertionSort.insertion_sort]
 
 for algorithm in sorting:
     temp_times = evaluate_sort(algorithm)

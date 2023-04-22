@@ -54,4 +54,4 @@ def generate_files(FILE_NO : int):
     for size in sizes:
         produce_file(size)
     
-generate_files(12)
+generate_files(10)
