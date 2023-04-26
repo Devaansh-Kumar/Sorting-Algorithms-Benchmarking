@@ -91,9 +91,150 @@ def g_img(times, func):
     plt.savefig(image_name + "log" + ".png")
     plt.clf()
 
-sorting = [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, HeapSort.heap_sort, MergeSort.merge_sort, RadixSort.radix_sort, InsertionSort.insertion_sort]
 
-for algorithm in sorting:
-    temp_times = evaluate_sort(algorithm)
-    g_img(temp_times, algorithm)
+def quick_img():
+    temp_times_first = evaluate_sort(QuickSortFirstElement.quick_sort_with_pivot_as_first_element)
+    temp_times_median = evaluate_sort(QuickSortMedianElement.quick_sort_with_pivot_as_median_element)
+    temp_times_random = evaluate_sort(QuickSortRandomElement.quick_sort_with_pivot_as_random_element)
 
+
+    def gen_df(times):
+        df = pd.DataFrame(times)
+        df['sizes'] = [i[0] for i in df['random'].values]
+        df['random'] = [i[1] for i in df['random'].values]
+        df['increasing'] = [i[1] for i in df['increasing'].values]
+        df['decreasing'] = [i[1] for i in df['decreasing'].values]
+        return df
+
+    df_first = gen_df(temp_times_first)
+    df_median = gen_df(temp_times_median)
+    df_random = gen_df(temp_times_random)
+
+    def fig_plot_save(title,image_name):
+        plt.title(f"Sorting using {title}")
+        plt.legend()
+        plt.rcParams['figure.figsize'] = [10,10]
+        plt.xlabel('size')
+        plt.ylabel('times (s)')
+        plt.savefig(image_name + "linear" + ".png")
+        plt.yscale('log')
+        plt.savefig(image_name + "log" + ".png")
+
+        plt.clf()
+
+    #This is for the best case
+
+    title = "Best case for all the three Quicksorts"
+    image_name = "best_case_all_quick"
+
+    plt.plot(df_first['sizes'],df_first['random'],marker='o',label='First element')
+    plt.plot(df_median['sizes'],df_median['increasing'],marker='o',label='Median element')
+    plt.plot(df_random['sizes'],df_random['increasing'],marker='o',label='Random element')
+
+
+    fig_plot_save(title,image_name)
+
+    #This is for the worst case
+
+    title = "Worst case for all the three Quicksorts"
+    image_name = "worst_case_all_quick"
+
+    plt.plot(df_first['sizes'],df_first['decreasing'],marker='o',label='First element')
+    plt.plot(df_median['sizes'],df_median['decreasing'],marker='o',label='Median element')
+    plt.plot(df_random['sizes'],df_random['random'],marker='o',label='Random element')
+
+    fig_plot_save(title,image_name)
+
+    #This is for the average case
+
+    title = "Average case for all the three Quicksorts"
+    image_name = "average_case_all_quick"
+
+    plt.plot(df_first['sizes'],df_first['random'],marker='o',label='First element')
+    plt.plot(df_median['sizes'],df_median['random'],marker='o',label='Median element')
+    plt.plot(df_random['sizes'],df_random['random'],marker='o',label='Random element')
+
+    fig_plot_save(title,image_name)
+
+def compare_all_sort_img():
+    temp_times_insertion = evaluate_sort(InsertionSort.insertion_sort)
+    temp_times_merge = evaluate_sort(MergeSort.merge_sort)
+    temp_times_quick = evaluate_sort(QuickSortRandomElement.quick_sort_with_pivot_as_random_element)
+    temp_times_heap = evaluate_sort(HeapSort.heap_sort)
+    temp_times_radix = evaluate_sort(RadixSort.radix_sort)
+
+    def gen_df(times):
+        df = pd.DataFrame(times)
+        df['sizes'] = [i[0] for i in df['random'].values]
+        df['random'] = [i[1] for i in df['random'].values]
+        df['increasing'] = [i[1] for i in df['increasing'].values]
+        df['decreasing'] = [i[1] for i in df['decreasing'].values]
+        return df
+
+    df_insertion = gen_df(temp_times_insertion)
+    df_merge = gen_df(temp_times_merge)
+    df_quick = gen_df(temp_times_quick)
+    df_heap = gen_df(temp_times_heap)
+    df_radix = gen_df(temp_times_radix)
+
+    def fig_plot_save(title,image_name):
+        plt.title(f"Sorting using {title}")
+        plt.legend()
+        plt.rcParams['figure.figsize'] = [10,10]
+        plt.xlabel('size')
+        plt.ylabel('times (s)')
+        plt.savefig(image_name + "linear" + ".png")
+        plt.yscale('log')
+        plt.savefig(image_name + "log" + ".png")
+
+        plt.clf()
+
+    #This is for the best case
+
+    title = "Best case for all the Sorting Algorithms"
+    image_name = "all_sort_best_case"
+
+    plt.plot(df_insertion['sizes'],df_insertion['increasing'],marker='o',label='insertion')
+    plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
+    plt.plot(df_quick['sizes'],df_quick['random'],marker='o',label='quick')
+    plt.plot(df_heap['sizes'],df_heap['random'],marker='o',label='heap')
+    plt.plot(df_radix['sizes'],df_radix['random'],marker='o',label='radix')
+
+
+    fig_plot_save(title,image_name)
+
+    #This is for the worst case
+
+    title = "Worst case for all the Sorting Algorithms"
+    image_name = "all_sort_worst_case"
+
+    plt.plot(df_insertion['sizes'],df_insertion['decreasing'],marker='o',label='insertion')
+    plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
+    plt.plot(df_quick['sizes'],df_quick['random'],marker='o',label='quick')
+    plt.plot(df_heap['sizes'],df_heap['random'],marker='o',label='heap')
+    plt.plot(df_radix['sizes'],df_radix['random'],marker='o',label='radix')
+
+    fig_plot_save(title,image_name)
+
+    #This is for the average case
+
+    title = "Average case for all the Sorting Algorithms"
+    image_name = "all_sort_average_case"
+
+    plt.plot(df_insertion['sizes'],df_insertion['random'],marker='o',label='insertion')
+    plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
+    plt.plot(df_quick['sizes'],df_quick['random'],marker='o',label='quick')
+    plt.plot(df_heap['sizes'],df_heap['random'],marker='o',label='heap')
+    plt.plot(df_radix['sizes'],df_radix['random'],marker='o',label='radix')
+
+    fig_plot_save(title,image_name)
+
+
+sorting = [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element] #, HeapSort.heap_sort, MergeSort.merge_sort, RadixSort.radix_sort, InsertionSort.insertion_sort]
+
+#for algorithm in sorting:
+#    temp_times = evaluate_sort(algorithm)
+#    g_img(temp_times, algorithm)
+
+# quick_img()
+compare_all_sort_img()

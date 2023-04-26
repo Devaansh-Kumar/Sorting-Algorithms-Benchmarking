@@ -1,6 +1,5 @@
 import random
 
-
 def partition(arr, low, high):
     pivot = arr[low]
     i = low + 1
