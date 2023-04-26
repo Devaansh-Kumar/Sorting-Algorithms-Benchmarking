@@ -7,6 +7,7 @@ import resource, sys
 
 resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(10000000)
+TRIALS = 3
 # t = [34,34,35,3,4234,24,3,4]
 
 def loader(path) -> list:
@@ -21,7 +22,7 @@ def timing_function(func):
         start_time = time.perf_counter()
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
-        print(f"Function {func.__name__!r} executed in {end_time - start_time:.5f} seconds")
+        print(f"Function {func.__name__!r} executed in {end_time - start_time} seconds")
         time_taken = end_time - start_time
         return (result,time_taken)
     return wrapper
@@ -42,16 +43,24 @@ def evaluate_sort(sort_func):
             list_of_numbers = loader("./"+directory+"/"+file)
 
             print(f"Sorting {len(list_of_numbers)} numbers")
-            if sort_func not in [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element]:
+            
+            total_time_taken = 0
 
-                _ , time_taken = wrapped_func(list_of_numbers)
+            for _ in range(TRIALS):
 
-            else:
-                _ , time_taken = wrapped_func(list_of_numbers,low=0,high=len(list_of_numbers)-1)
+                if sort_func not in [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element]:
+                    _ , time_taken = wrapped_func(list_of_numbers)
 
-            print(f"Time taken for {directory} numbers of {file} to be sorted is {time_taken}\n")
+                else:
+                    _ , time_taken = wrapped_func(list_of_numbers,low=0,high=len(list_of_numbers)-1)
+                
+                total_time_taken += time_taken
 
-            times[directory].append((len(list_of_numbers),time_taken))
+            avg_time_taken = total_time_taken/TRIALS
+
+            print(f"Time taken for {directory} numbers of {file} to be sorted is {avg_time_taken} seconds\n")
+
+            times[directory].append((len(list_of_numbers),avg_time_taken))
 
         times[directory] = sorted(times[directory])
 
@@ -230,11 +239,13 @@ def compare_all_sort_img():
     fig_plot_save(title,image_name)
 
 
-sorting = [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element] #, HeapSort.heap_sort, MergeSort.merge_sort, RadixSort.radix_sort, InsertionSort.insertion_sort]
+sorting = [QuickSortFirstElement.quick_sort_with_pivot_as_first_element, QuickSortMedianElement.quick_sort_with_pivot_as_median_element, QuickSortRandomElement.quick_sort_with_pivot_as_random_element, HeapSort.heap_sort, MergeSort.merge_sort, RadixSort.radix_sort, InsertionSort.insertion_sort]
 
-#for algorithm in sorting:
-#    temp_times = evaluate_sort(algorithm)
-#    g_img(temp_times, algorithm)
 
-# quick_img()
-compare_all_sort_img()
+def evaluate():
+    for algorithm in sorting:
+        temp_times = evaluate_sort(algorithm)
+        g_img(temp_times, algorithm)
+
+    quick_img()
+    compare_all_sort_img()

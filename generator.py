@@ -49,9 +49,8 @@ def generate_files(FILE_NO : int):
     current_path = os.getcwd()
     for directory in directories:
         path = os.path.join(current_path, directory)
-        os.mkdir(path)
+        if directory not in os.listdir():
+            os.mkdir(path)
 
     for size in sizes:
         produce_file(size)
-    
-generate_files(10)
