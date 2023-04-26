@@ -1,7 +1,7 @@
 import random
 import os
 
-def get_sizes(MAX_POWER_OF_10 : int = 6,FOLD_INCREASE : int = 3) -> list:
+def get_sizes(MAX_POWER_OF_10 : int = 4,FOLD_INCREASE : int = 3) -> list:
     """
         This function generators the different sizes of the input files.
         We will be taking the input sizes increasing by three-fold(default)
@@ -12,7 +12,12 @@ def get_sizes(MAX_POWER_OF_10 : int = 6,FOLD_INCREASE : int = 3) -> list:
         sizes.append(int(10**i/FOLD_INCREASE))
         sizes.append(10**i)
 
-    return sizes
+    for i in range(sizes[-2],sizes[-1],(10**(MAX_POWER_OF_10-1))*2):
+        if i == sizes[-2]:
+            continue
+        sizes.append(i)
+    print(sorted(sizes))
+    return sorted(sizes)
 
 def produce_file(FILE_SIZE : int):
     file_name = "size_" + str(FILE_SIZE) + ".txt"
@@ -45,7 +50,7 @@ def produce_file(FILE_SIZE : int):
 def generate_files(FILE_NO : int):
     sizes = get_sizes(FILE_NO//2)
 
-    directories = ["random", "increasing", "decreasing"]
+    directories = ["random", "increasing", "decreasing", "plots"]
     current_path = os.getcwd()
     for directory in directories:
         path = os.path.join(current_path, directory)

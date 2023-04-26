@@ -7,7 +7,7 @@ import resource, sys
 
 resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(10000000)
-TRIALS = 3
+TRIALS = 1
 # t = [34,34,35,3,4234,24,3,4]
 
 def loader(path) -> list:
@@ -66,6 +66,9 @@ def evaluate_sort(sort_func):
 
     return times
 
+def put_in_folder(path):
+    return "plots/"+path
+
 def visualise_images(times,sorting_algorithm: str):
     #Get times directly from evaluate_sort
     df = pd.DataFrame(times)
@@ -85,7 +88,7 @@ def g_img(times, func):
     df['decreasing'] = [i[1] for i in df['decreasing'].values]
 
     title = " ".join(func.__name__.split('_')).title()
-    image_name = func.__name__
+    image_name = "plots/"+func.__name__
 
     plt.title(f"Sorting using {title}")
     plt.plot(df['sizes'],df['random'],marker='o',label='random')
@@ -93,11 +96,11 @@ def g_img(times, func):
     plt.plot(df['sizes'],df['decreasing'],marker='o',label='decreasing')
     plt.legend()
     plt.rcParams['figure.figsize'] = [10,10]
-    plt.xlabel('size')
-    plt.ylabel('times (s)')
-    plt.savefig(image_name + "linear" + ".png")
+    plt.xlabel('Sizes')
+    plt.ylabel('Times (s)')
+    plt.savefig(image_name + "_linear" + ".png")
     plt.yscale('log')
-    plt.savefig(image_name + "log" + ".png")
+    plt.savefig(image_name + "_log" + ".png")
     plt.clf()
 
 
@@ -123,18 +126,18 @@ def quick_img():
         plt.title(f"Sorting using {title}")
         plt.legend()
         plt.rcParams['figure.figsize'] = [10,10]
-        plt.xlabel('size')
-        plt.ylabel('times (s)')
-        plt.savefig(image_name + "linear" + ".png")
+        plt.xlabel('Sizes')
+        plt.ylabel('Times (s)')
+        plt.savefig(image_name + "_linear" + ".png")
         plt.yscale('log')
-        plt.savefig(image_name + "log" + ".png")
+        plt.savefig(image_name + "_log" + ".png")
 
         plt.clf()
 
     #This is for the best case
 
     title = "Best case for all the three Quicksorts"
-    image_name = "best_case_all_quick"
+    image_name = "plots/"+"best_case_all_quick"
 
     plt.plot(df_first['sizes'],df_first['random'],marker='o',label='First element')
     plt.plot(df_median['sizes'],df_median['increasing'],marker='o',label='Median element')
@@ -146,7 +149,7 @@ def quick_img():
     #This is for the worst case
 
     title = "Worst case for all the three Quicksorts"
-    image_name = "worst_case_all_quick"
+    image_name = "plots/"+"worst_case_all_quick"
 
     plt.plot(df_first['sizes'],df_first['decreasing'],marker='o',label='First element')
     plt.plot(df_median['sizes'],df_median['decreasing'],marker='o',label='Median element')
@@ -157,7 +160,7 @@ def quick_img():
     #This is for the average case
 
     title = "Average case for all the three Quicksorts"
-    image_name = "average_case_all_quick"
+    image_name = "plots/"+"average_case_all_quick"
 
     plt.plot(df_first['sizes'],df_first['random'],marker='o',label='First element')
     plt.plot(df_median['sizes'],df_median['random'],marker='o',label='Median element')
@@ -190,18 +193,18 @@ def compare_all_sort_img():
         plt.title(f"Sorting using {title}")
         plt.legend()
         plt.rcParams['figure.figsize'] = [10,10]
-        plt.xlabel('size')
-        plt.ylabel('times (s)')
-        plt.savefig(image_name + "linear" + ".png")
+        plt.xlabel('Size')
+        plt.ylabel('Times (s)')
+        plt.savefig(image_name + "_linear" + ".png")
         plt.yscale('log')
-        plt.savefig(image_name + "log" + ".png")
+        plt.savefig(image_name + "_log" + ".png")
 
         plt.clf()
 
     #This is for the best case
 
     title = "Best case for all the Sorting Algorithms"
-    image_name = "all_sort_best_case"
+    image_name = "plots/"+"all_sort_best_case"
 
     plt.plot(df_insertion['sizes'],df_insertion['increasing'],marker='o',label='insertion')
     plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
@@ -215,7 +218,7 @@ def compare_all_sort_img():
     #This is for the worst case
 
     title = "Worst case for all the Sorting Algorithms"
-    image_name = "all_sort_worst_case"
+    image_name = "plots/"+"all_sort_worst_case"
 
     plt.plot(df_insertion['sizes'],df_insertion['decreasing'],marker='o',label='insertion')
     plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
@@ -228,7 +231,7 @@ def compare_all_sort_img():
     #This is for the average case
 
     title = "Average case for all the Sorting Algorithms"
-    image_name = "all_sort_average_case"
+    image_name = "plots/"+"all_sort_average_case"
 
     plt.plot(df_insertion['sizes'],df_insertion['random'],marker='o',label='insertion')
     plt.plot(df_merge['sizes'],df_merge['random'],marker='o',label='merge')
