@@ -1,7 +1,7 @@
 import os
 import time
 import resource, sys
-from typing import Callable, List, Dict, Union, Tuple
+from typing import Callable, List, Dict, Tuple
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -55,7 +55,7 @@ def timing_function(func: Callable[[List[int]],List[int]]) -> Callable[[List[int
 
     return wrapper
 
-def evaluate_sort(sort_func: Callable[[List[int]],List[int]]) -> Dict[Union[str,Tuple[int,float]]]:
+def evaluate_sort(sort_func: Callable[[List[int]],List[int]]) -> Dict[str,Tuple[int,float]]:
     """Evaluates the sorting algorithm
 
     Args:
@@ -107,7 +107,7 @@ def evaluate_sort(sort_func: Callable[[List[int]],List[int]]) -> Dict[Union[str,
 
     return times
 
-def gen_df(times: Dict[Union[str,Tuple[int,float]]]) -> pd.DataFrame:
+def gen_df(times: Dict[str,Tuple[int,float]]) -> pd.DataFrame:
     """This function generates a dataframe containing the performance of the given sorting algorithm
 
     Args:
@@ -146,7 +146,7 @@ def fig_plot_save(title: str,image_name: str) -> None:
     plt.savefig(image_name + "_log" + ".png")
     plt.clf()
 
-def g_img(times: Dict[Union[str,Tuple[int,float]]], func: Callable[[List[int]],List[int]]) -> None:
+def g_img(times: Dict[str,Tuple[int,float]], func: Callable[[List[int]],List[int]]) -> None:
     """For a given sorting algorithm and its performance time, we will generate plots with a linear and logarithmic scale
 
     Args:
